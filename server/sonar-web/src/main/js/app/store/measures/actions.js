@@ -17,17 +17,11 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-import { post, requestDelete, getJSON } from '../helpers/request';
+export const RECEIVE_COMPONENT_MEASURE = 'RECEIVE_COMPONENT_MEASURE';
 
-export const getFavorites = () => getJSON('/api/favourites');
-
-export function addFavorite (componentKey) {
-  const url = '/api/favourites';
-  const data = { key: componentKey };
-  return post(url, data);
-}
-
-export function removeFavorite (componentKey) {
-  const url = '/api/favourites/' + encodeURIComponent(componentKey);
-  return requestDelete(url);
-}
+export const receiveComponentMeasure = (componentKey, metricKey, value) => ({
+  type: RECEIVE_COMPONENT_MEASURE,
+  componentKey,
+  metricKey,
+  value
+});

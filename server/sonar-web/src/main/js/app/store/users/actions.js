@@ -17,17 +17,15 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-import { post, requestDelete, getJSON } from '../helpers/request';
+import { getCurrentUser } from '../../../api/users';
 
-export const getFavorites = () => getJSON('/api/favourites');
+export const RECEIVE_CURRENT_USER = 'RECEIVE_CURRENT_USER';
 
-export function addFavorite (componentKey) {
-  const url = '/api/favourites';
-  const data = { key: componentKey };
-  return post(url, data);
-}
+export const receiveCurrentUser = user => ({
+  type: RECEIVE_CURRENT_USER,
+  user
+});
 
-export function removeFavorite (componentKey) {
-  const url = '/api/favourites/' + encodeURIComponent(componentKey);
-  return requestDelete(url);
-}
+export const fetchCurrentUser = () => dispatch => {
+  getCurrentUser().then(user => dispatch(receiveCurrentUser(user)));
+};

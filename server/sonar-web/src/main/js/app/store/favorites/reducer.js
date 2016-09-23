@@ -17,17 +17,29 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-import { post, requestDelete, getJSON } from '../helpers/request';
+import { combineReducers } from 'redux';
+import keyBy from 'lodash/keyBy';
+import { RECEIVE_FAVORITES } from './actions';
 
-export const getFavorites = () => getJSON('/api/favourites');
+const favoritesByKey = (state = {}, action = {}) => {
+  if (action.type === RECEIVE_FAVORITES) {
+    const byKey = keyBy(action.favorites, 'key');
+    return { ...state, ...byKey };
+  }
 
-export function addFavorite (componentKey) {
-  const url = '/api/favourites';
-  const data = { key: componentKey };
-  return post(url, data);
-}
+  return state;
+};
 
-export function removeFavorite (componentKey) {
-  const url = '/api/favourites/' + encodeURIComponent(componentKey);
-  return requestDelete(url);
-}
+const favoriteKeys = (state = [], action = {}) => {
+  if (action.type === RECEIVE_FAVORITES) {
+    return action.favorites.map(f => f.key);
+  }
+
+  return state;
+};
+
+export default combineReducers({ favoritesByKey, favoriteKeys });
+
+export const getFavorites = state => (
+    state.favoriteKeys.map(key => state.favoritesByKey[key])
+);

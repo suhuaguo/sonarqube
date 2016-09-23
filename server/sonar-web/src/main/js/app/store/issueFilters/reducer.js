@@ -17,17 +17,22 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-import { post, requestDelete, getJSON } from '../helpers/request';
+import { RECEIVE_ISSUE_FILTERS } from './actions';
 
-export const getFavorites = () => getJSON('/api/favourites');
+const reducer = (state = [], action = {}) => {
+  if (action.type === RECEIVE_ISSUE_FILTERS) {
+    return action.filters;
+  }
 
-export function addFavorite (componentKey) {
-  const url = '/api/favourites';
-  const data = { key: componentKey };
-  return post(url, data);
-}
+  return state;
+};
 
-export function removeFavorite (componentKey) {
-  const url = '/api/favourites/' + encodeURIComponent(componentKey);
-  return requestDelete(url);
-}
+export default reducer;
+
+export const getIssueFilters = state => (
+    state
+);
+
+export const getFavoriteIssueFilters = state => (
+    state.filter(f => f.favorite)
+);

@@ -17,17 +17,36 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-import { post, requestDelete, getJSON } from '../helpers/request';
+import { combineReducers } from 'redux';
+import uniq from 'lodash/uniq';
+import { RECEIVE_CURRENT_USER } from './actions';
 
-export const getFavorites = () => getJSON('/api/favourites');
+const usersByLogin = (state = {}, action = {}) => {
+  if (action.type === RECEIVE_CURRENT_USER) {
+    return { ...state, [action.user.login]: action.user };
+  }
 
-export function addFavorite (componentKey) {
-  const url = '/api/favourites';
-  const data = { key: componentKey };
-  return post(url, data);
-}
+  return state;
+};
 
-export function removeFavorite (componentKey) {
-  const url = '/api/favourites/' + encodeURIComponent(componentKey);
-  return requestDelete(url);
-}
+const userLogins = (state = [], action = {}) => {
+  if (action.type === RECEIVE_CURRENT_USER) {
+    return uniq([...state, action.user.login]);
+  }
+
+  return state;
+};
+
+const currentUser = (state = null, action = {}) => {
+  if (action.type === RECEIVE_CURRENT_USER) {
+    return action.user.login;
+  }
+
+  return state;
+};
+
+export default combineReducers({ usersByLogin, userLogins, currentUser });
+
+export const getCurrentUser = state => (
+    state.currentUser ? state.usersByLogin[state.currentUser] : null
+);

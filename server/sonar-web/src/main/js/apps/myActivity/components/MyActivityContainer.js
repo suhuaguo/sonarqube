@@ -17,17 +17,12 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-import { post, requestDelete, getJSON } from '../helpers/request';
+import { connect } from 'react-redux';
+import MyActivity from './MyActivity';
+import { getCurrentUser } from '../../../app/store/rootReducer';
 
-export const getFavorites = () => getJSON('/api/favourites');
+const mapStateToProps = state => ({
+  currentUser: getCurrentUser(state)
+});
 
-export function addFavorite (componentKey) {
-  const url = '/api/favourites';
-  const data = { key: componentKey };
-  return post(url, data);
-}
-
-export function removeFavorite (componentKey) {
-  const url = '/api/favourites/' + encodeURIComponent(componentKey);
-  return requestDelete(url);
-}
+export default connect(mapStateToProps)(MyActivity);

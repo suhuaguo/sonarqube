@@ -17,17 +17,28 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-import { post, requestDelete, getJSON } from '../helpers/request';
+import { RECEIVE_COMPONENT_MEASURE } from './actions';
 
-export const getFavorites = () => getJSON('/api/favourites');
+const byMetricKey = (state = {}, action = {}) => {
+  if (action.type === RECEIVE_COMPONENT_MEASURE) {
+    return { ...state, [action.metricKey]: action.value };
+  }
 
-export function addFavorite (componentKey) {
-  const url = '/api/favourites';
-  const data = { key: componentKey };
-  return post(url, data);
-}
+  return state;
+};
 
-export function removeFavorite (componentKey) {
-  const url = '/api/favourites/' + encodeURIComponent(componentKey);
-  return requestDelete(url);
-}
+const reducer = (state = {}, action = {}) => {
+  if (action.type === RECEIVE_COMPONENT_MEASURE) {
+    const component = state[action.componentKey];
+    return { ...state, [action.componentKey]: byMetricKey(component, action) };
+  }
+
+  return state;
+};
+
+export default reducer;
+
+export const getComponentMeasure = (state, componentKey, metricKey) => {
+  const component = state[componentKey];
+  return component && component[metricKey];
+};

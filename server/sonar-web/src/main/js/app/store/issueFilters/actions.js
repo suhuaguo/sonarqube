@@ -17,17 +17,20 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-import { post, requestDelete, getJSON } from '../helpers/request';
+import { getIssueFilters } from '../../../api/issues';
+import { addGlobalErrorMessage } from '../../../components/store/globalMessages';
+import { parseError } from '../../../apps/code/utils';
 
-export const getFavorites = () => getJSON('/api/favourites');
+export const RECEIVE_ISSUE_FILTERS = 'RECEIVE_ISSUE_FILTERS';
 
-export function addFavorite (componentKey) {
-  const url = '/api/favourites';
-  const data = { key: componentKey };
-  return post(url, data);
-}
+const receiveFavoriteIssueFilters = filters => ({
+  type: RECEIVE_ISSUE_FILTERS,
+  filters
+});
 
-export function removeFavorite (componentKey) {
-  const url = '/api/favourites/' + encodeURIComponent(componentKey);
-  return requestDelete(url);
-}
+export const fetchIssueFilters = () => dispatch => {
+  getIssueFilters().then(
+      filters => dispatch(receiveFavoriteIssueFilters(filters)),
+      error => parseError(error).then(message => dispatch(addGlobalErrorMessage(message)))
+  );
+};

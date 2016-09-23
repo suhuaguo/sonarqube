@@ -17,17 +17,25 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-import { post, requestDelete, getJSON } from '../helpers/request';
+import React from 'react';
+import { connect } from 'react-redux';
+import { fetchCurrentUser } from '../store/users/actions';
 
-export const getFavorites = () => getJSON('/api/favourites');
+class App extends React.Component {
+  static propTypes = {
+    fetchCurrentUser: React.PropTypes.func.isRequired
+  };
 
-export function addFavorite (componentKey) {
-  const url = '/api/favourites';
-  const data = { key: componentKey };
-  return post(url, data);
+  componentDidMount () {
+    this.props.fetchCurrentUser();
+  }
+
+  render () {
+    return this.props.children;
+  }
 }
 
-export function removeFavorite (componentKey) {
-  const url = '/api/favourites/' + encodeURIComponent(componentKey);
-  return requestDelete(url);
-}
+export default connect(
+    () => ({}),
+    { fetchCurrentUser }
+)(App);
