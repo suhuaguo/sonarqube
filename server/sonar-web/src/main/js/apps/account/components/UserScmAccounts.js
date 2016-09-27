@@ -17,34 +17,38 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-import React, { Component } from 'react';
-import Helmet from 'react-helmet';
-
-import IssuesApp from '../issues-app';
+import React from 'react';
 import { translate } from '../../../helpers/l10n';
 
-export default class Issues extends Component {
-  componentDidMount () {
-    this.issuesApp = IssuesApp;
-    this.issuesApp.start({
-      el: this.refs.container
-    });
-  }
-
-  componentWillUnmount () {
-    this.issuesApp.stop();
-  }
+export default class UserScmAccounts extends React.Component {
+  static propTypes = {
+    user: React.PropTypes.object.isRequired,
+    scmAccounts: React.PropTypes.arrayOf(React.PropTypes.string).isRequired
+  };
 
   render () {
-    const title = translate('my_account.page') + ' - ' +
-        translate('issues.page');
+    const { user, scmAccounts } = this.props;
 
     return (
         <div>
-          <Helmet
-              title={title}
-              titleTemplate="SonarQube - %s"/>
-          <div ref="container"></div>
+          <h2 className="spacer-bottom">{translate('my_profile.scm_accounts')}</h2>
+          <ul id="scm-accounts">
+            <li className="little-spacer-bottom text-ellipsis" title={user.login}>
+              {user.login}
+            </li>
+
+            {user.email && (
+                <li className="little-spacer-bottom text-ellipsis" title={user.email}>
+                  {user.email}
+                </li>
+            )}
+
+            {scmAccounts.map(scmAccount => (
+                <li key={scmAccount} className="little-spacer-bottom" title={scmAccount}>
+                  {scmAccount}
+                </li>
+            ))}
+          </ul>
         </div>
     );
   }

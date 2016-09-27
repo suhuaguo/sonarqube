@@ -74,14 +74,6 @@ public class MyAccountPageTest {
   }
 
   @Test
-  public void should_display_issues() throws Exception {
-    Selenese selenese = Selenese.builder().setHtmlTestsInClasspath("should_display_issues",
-      "/user/MyAccountPageTest/should_display_issues.html"
-    ).build();
-    new SeleneseTest(selenese).runOn(orchestrator);
-  }
-
-  @Test
   public void should_display_projects() throws Exception {
     // first, try on empty instance
     Selenese selenese = Selenese.builder().setHtmlTestsInClasspath("should_display_projects",

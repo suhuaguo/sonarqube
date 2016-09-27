@@ -18,40 +18,17 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 import React from 'react';
-import { connect } from 'react-redux';
-import Helmet from 'react-helmet';
-import Password from './Password';
-import Tokens from './Tokens';
-import { translate } from '../../../helpers/l10n';
-import { getCurrentUser } from '../../../app/store/rootReducer';
+import { Route, IndexRoute, Redirect } from 'react-router';
+import Account from './components/Account';
+import ProjectsContainer from './projects/ProjectsContainer';
+import NotificationsContainer from './notifications/NotificationsContainer';
+import Security from './components/Security';
 
-class Security extends React.Component {
-  render () {
-    const { user } = this.props;
-
-    const title = translate('my_account.page') + ' - ' +
-        translate('my_account.security');
-
-    return (
-        <div>
-          <Helmet
-              title={title}
-              titleTemplate="SonarQube - %s"/>
-
-          <Tokens user={user}/>
-
-          {user.local && (
-              <hr/>
-          )}
-
-          {user.local && (
-              <Password user={user}/>
-          )}
-        </div>
-    );
-  }
-}
-
-export default connect(
-    state => ({ user: getCurrentUser(state) })
-)(Security);
+export default (
+    <Route path="account" component={Account}>
+      <Redirect from="/account/projects" to="/account"/>
+      <IndexRoute component={ProjectsContainer}/>
+      <Route path="notifications" component={NotificationsContainer}/>
+      <Route path="security" component={Security}/>
+    </Route>
+);

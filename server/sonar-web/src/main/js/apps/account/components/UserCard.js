@@ -18,33 +18,41 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 import React from 'react';
-import { IndexLink } from 'react-router';
-
 import UserExternalIdentity from './UserExternalIdentity';
+import UserGroups from './UserGroups';
+import UserScmAccounts from './UserScmAccounts';
 import Avatar from '../../../components/ui/Avatar';
 
-const UserCard = ({ user }) => {
-  return (
-      <section className="account-user clearfix">
-        <div id="avatar" className="account-nav-avatar">
-          <IndexLink to="/" className="link-no-underline">
-            <Avatar email={user.email} size={48}/>
-          </IndexLink>
-        </div>
-        <div>
-          <IndexLink to="/" className="link-no-underline">
-            <h1 id="name" className="display-inline-block">{user.name}</h1>
-          </IndexLink>
-          <span id="login" className="note big-spacer-left">{user.login}</span>
-          {!user.local && user.externalProvider !== 'sonarqube' && (
-              <span id="identity-provider" className="big-spacer-left">
+export default class UserCard extends React.Component {
+  static propTypes = {
+    user: React.PropTypes.object.isRequired
+  };
+
+  render () {
+    const { user } = this.props;
+
+    return (
+        <div className="boxed-group boxed-group-inner">
+          <div className="clearfix">
+            <div id="avatar" className="account-nav-avatar">
+              <Avatar email={user.email} size={48}/>
+            </div>
+            <div>
+              <h1 id="name" className="display-inline-block">{user.name}</h1>
+              <span id="login" className="note big-spacer-left">{user.login}</span>
+              {!user.local && user.externalProvider !== 'sonarqube' && (
+                  <span id="identity-provider" className="big-spacer-left">
                 <UserExternalIdentity user={user}/>
               </span>
-          )}
+              )}
+            </div>
+            <div id="email" className="little-spacer-top">{user.email}</div>
+          </div>
+          <hr/>
+          <UserGroups groups={user.groups}/>
+          <hr/>
+          <UserScmAccounts user={user} scmAccounts={user.scmAccounts}/>
         </div>
-        <div id="email" className="little-spacer-top">{user.email}</div>
-      </section>
-  );
-};
-
-export default UserCard;
+    );
+  }
+}

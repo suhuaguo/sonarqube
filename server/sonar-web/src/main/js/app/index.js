@@ -19,13 +19,15 @@
  */
 import React from 'react';
 import { render } from 'react-dom';
-import { Router, Route, Redirect, useRouterHistory } from 'react-router';
+import { Router, Route, useRouterHistory } from 'react-router';
 import { createHistory } from 'history';
 import { Provider } from 'react-redux';
 import App from './components/App';
-import MyActivity from '../apps/myActivity/components/MyActivityContainer';
+import MyActivity from '../apps/myActivity/components/MyActivity';
+import accountRoutes from '../apps/account/routes';
 import configureStore from '../components/store/configureStore';
 import rootReducer from './store/rootReducer';
+import './styles.css';
 
 window.sonarqube.appStarted.then(options => {
   const el = document.querySelector(options.el);
@@ -40,9 +42,8 @@ window.sonarqube.appStarted.then(options => {
       <Provider store={store}>
         <Router history={history}>
           <Route path="/" component={App}>
-            <Redirect from="my_activity/index" to="my_activity"/>
-
             <Route path="my_activity" component={MyActivity}/>
+            {accountRoutes}
           </Route>
         </Router>
       </Provider>
