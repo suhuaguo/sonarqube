@@ -55,8 +55,12 @@ class DashboardController < ApplicationController
         end
       end
     else
-      load_dashboard()
-      load_authorized_widget_definitions()
+      if logged_in?
+        return redirect_to :controller => 'my_activity'
+      else
+        load_dashboard()
+        load_authorized_widget_definitions()
+      end
     end
   end
 
